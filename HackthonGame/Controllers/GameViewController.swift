@@ -12,13 +12,15 @@ import GameplayKit
 import SystemConfiguration
 
 class GameViewController: UIViewController {
-    
     private let reachability = Reachability()!
+    //private let reachability = SCNetworkReachabilityCreateWithName(nil, "www.raywenderlich.com")
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.setReachabilityNotifier()
     }
     
+    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         //self.checkReachable()
@@ -51,9 +53,28 @@ class GameViewController: UIViewController {
             return .all
         }
     }
-
-    
-    
+   
+//    private func checkReachable()
+//    {
+//        var flags = SCNetworkReachabilityFlags()
+//        SCNetworkReachabilityGetFlags(self.reachability!, &flags)
+//
+//        if (isNetworkReachable(with: flags))
+//        {
+//            print (flags)
+//            if flags.contains(.isWWAN) {
+//                self.alert(message:"via mobile",title:"Reachable")
+//                return
+//            }
+//
+//            self.alert(message:"via wifi",title:"Reachable")
+//        }
+//        else if (!isNetworkReachable(with: flags)) {
+//            self.alert(message:"Sorry no connection",title: "unreachable")
+//            print (flags)
+//            return
+//        }
+//    }
     private func isNetworkReachable(with flags: SCNetworkReachabilityFlags) -> Bool {
         let isReachable = flags.contains(.reachable)
         let needsConnection = flags.contains(.connectionRequired)
