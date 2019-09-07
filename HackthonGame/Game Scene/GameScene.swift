@@ -17,15 +17,19 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var actor = SKSpriteNode.init(imageNamed: "actor")
     var scoreLabel = SKLabelNode.init(text: "Score :")
     var highScoreLabel = SKLabelNode.init(text: "HI : ")
+    var gameOverLabel = SKLabelNode.init(text: "Game Over \nTap to play")
     var score: Int = 0 {
         didSet {
             scoreLabel.text = "Score: \(score)"
         }
     }
+    var gameLevelImage = 0
     var highScore = 0
-    var itemLimits = 20
+    var itemLimits = 10
+    var lastLimit = 10
+    var gravityValue = -0.8
     
-    var isGameOver = false
+    var isGameOver = true
     var isActorHold = false
     
     //Life Cycle
@@ -33,12 +37,19 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         initializeVariables()
         self.size = screenSize
         self.physicsWorld.contactDelegate = self
-        self.physicsWorld.gravity = CGVector.init(dx: 0, dy: -1.8)
+        self.physicsWorld.gravity = CGVector.init(dx: 0, dy: gravityValue)
     }
     
     //Initilizer
     private func initializeVariables() {
         screenSize = CGSize.init(width: UIScreen.main.bounds.size.width * 2, height: UIScreen.main.bounds.size.height * 2)
+        
+        gameOverLabel = SKLabelNode(fontNamed: "Chalkduster")
+        gameOverLabel.text = "Tap to Play"
+        gameOverLabel.fontColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        gameOverLabel.horizontalAlignmentMode = .center
+        gameOverLabel.position = CGPoint(x: 0, y: 0)
+        addChild(gameOverLabel)
         
         scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
         scoreLabel.text = "Score: 0"
@@ -54,7 +65,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         highScoreLabel.position = CGPoint(x: (screenSize.width / 2) - (highScoreLabel.frame.size.width / 2), y: (screenSize.height / 2) - 100)
         addChild(highScoreLabel)
         
-         actor = generateSpriteNode(texture: "bowl", position: CGPoint.init(x: 0, y: -(screenSize.height / 2) + 100), size: CGSize.init(width: 150, height: 100))
+        actor = generateSpriteNode(texture: "bowl", position: CGPoint.init(x: 0, y: -(screenSize.height / 2) + 100), size: CGSize.init(width: 150, height: 100))
         actor.name = "actor"
         actor.applyPhysics(isDynamic: false)
         addChild(actor)
@@ -62,10 +73,9 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         let rain = SKEmitterNode.init(fileNamed: "RainParticle.sks")
         rain?.position = CGPoint.init(x: 0, y: screenSize.height / 2)
         addChild(rain!)
-        
         setUpBorders()
-        gameNodeGenerateTimer()
     }
+    
     
     //Setup Borders
     func setUpBorders() {
@@ -106,22 +116,30 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     
     //MARK:- Items Generate Timer
     func gameNodeGenerateTimer() {
-        let wait = SKAction.wait(forDuration: 0.5)
+        let wait = SKAction.wait(forDuration: 0.8)
         let run = SKAction.run {
-            let item = self.generateSpriteNode(texture: "\(self.getRandomNumber(start: 1, end: 8))", position: CGPoint.init(x: self.getRandomNumber(start: Int(-self.screenSize.width / 2), end: Int(self.screenSize.width / 2)), y: self.getRandomNumber(start: Int(self.screenSize.height / 2), end: Int(self.screenSize.height / 2) + 300)), size: CGSize.init(width: 80, height: 80))
-            item.name = "goodItem"
+            self.itemLimits = self.itemLimits - 1
+            let randNo = self.getRandomNumber(start: 0, end: 14)
+            
+            let item = self.generateSpriteNode(texture: "apple", position: CGPoint.init(x: self.getRandomNumber(start: Int(-self.screenSize.width / 2), end: Int(self.screenSize.width / 2)), y: self.getRandomNumber(start: Int(self.screenSize.height / 2), end: Int(self.screenSize.height / 2) + 300)), size: CGSize.init(width: 80, height: 80))
+            
+            if randNo > 10
+            {
+                item.name = "badItem"
+                item.texture = SKTexture.init(imageNamed: "\(randNo)")
+            }
+            else{
+                item.name = "goodItem"
+                item.texture = SKTexture.init(imageNamed: "\(self.gameLevelImage)")
+            }
             self.addChild(item)
         }
         let sequence = SKAction.sequence([wait,run])
-        let action = SKAction.repeat(sequence, count: 20)
+        let action = SKAction.repeat(sequence, count: itemLimits)
         self.run(action)
-        
     }
     
-    //MARK:- Update Game
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-    }
+  
     
     //MARK:- Touch Handle
     func touchMovesInPoint(point:CGPoint)  {
@@ -138,9 +156,17 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        if isGameOver {
+            gameOverLabel.isHidden = true
+            gameReset()
+            return
+        }
+        
         let touch = touches.first
         let positionInScene = touch?.location(in: self)
         for node in nodes(at: positionInScene!) {
+            
             if (node.name == "actor") || (node.name == "background")
             {
                 isActorHold = true
@@ -149,6 +175,11 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if isGameOver
+        {
+            return
+        }
+        
         if isActorHold {
             
             for touch in touches
@@ -176,6 +207,71 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         else if contact.bodyB.node?.name == "goodItem" && contact.bodyA.node?.name == "actor" {
             contact.bodyB.node?.removeFromParent()
             score = score + 1
+        }
+        else if contact.bodyA.node?.name == "badItem" && contact.bodyB.node?.name == "actor" {
+            isGameOver = true
+            gameOver()
+            
+        }
+        else if contact.bodyB.node?.name == "badItem" && contact.bodyA.node?.name == "actor" {
+            isGameOver = true
+            gameOver()
+        }
+        else if contact.bodyA.node?.name == "badItem" || contact.bodyA.node?.name == "goodItem"
+        {
+            contact.bodyA.node?.removeFromParent()
+        }
+        else if contact.bodyB.node?.name == "badItem" || contact.bodyB.node?.name == "goodItem"
+        {
+            contact.bodyB.node?.removeFromParent()
+        }
+    }
+    
+    //MARK:- Game Over & Reset
+    func gameOver() {
+        self.isPaused = true
+        if highScore < score {
+            highScoreLabel.text = "HI : \(score)"
+            highScore = score
+            gameOverLabel.text = "GAME OVER \n Tap To Play"
+            gameOverLabel.isHidden = false
+        }
+    }
+    
+    func gameReset() {
+        
+        for node in self.children {
+            if node.name == "goodItem" || node.name == "badItem"
+            {
+                node.removeFromParent()
+            }
+        }
+        
+        isGameOver = false
+        self.physicsWorld.gravity = CGVector.init(dx: 0, dy: gravityValue)
+        itemLimits = 20
+        score = 0
+        gravityValue = -0.8
+        self.isPaused = false
+        gameNodeGenerateTimer()
+    }
+    
+    //MARK:- Update Game
+    override func update(_ currentTime: TimeInterval) {
+        // Called before each frame is rendered
+        if itemLimits < 1 {
+            lastLimit = lastLimit + 5
+            itemLimits = lastLimit
+            gravityValue = gravityValue - -0.5
+            if gameLevelImage < 10
+            {
+                gameLevelImage = gameLevelImage + 1
+            }
+            else
+            {
+                gameLevelImage  = 0
+            }
+            gameNodeGenerateTimer()
         }
     }
 }
