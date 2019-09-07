@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		23687761232423C8002B0E02 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23687760232423C8002B0E02 /* Reachability.swift */; };
 		4998BF1C231FE78D00BA5298 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4998BF1B231FE78D00BA5298 /* AppDelegate.swift */; };
 		4998BF1E231FE78D00BA5298 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4998BF1D231FE78D00BA5298 /* GameScene.sks */; };
 		4998BF22231FE78D00BA5298 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4998BF21231FE78D00BA5298 /* GameScene.swift */; };
@@ -15,9 +16,12 @@
 		4998BF29231FE78F00BA5298 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4998BF28231FE78F00BA5298 /* Assets.xcassets */; };
 		4998BF2C231FE78F00BA5298 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4998BF2A231FE78F00BA5298 /* LaunchScreen.storyboard */; };
 		4998BF34231FE97600BA5298 /* RainParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4998BF33231FE97600BA5298 /* RainParticle.sks */; };
+		499AD2052324570200C20B13 /* coinSound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 499AD2042324570200C20B13 /* coinSound.mp3 */; };
+		499AD20923245CBA00C20B13 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499AD20823245CBA00C20B13 /* Reachability.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		23687760232423C8002B0E02 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		4998BF18231FE78D00BA5298 /* HackthonGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HackthonGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4998BF1B231FE78D00BA5298 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4998BF1D231FE78D00BA5298 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -28,6 +32,8 @@
 		4998BF2B231FE78F00BA5298 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4998BF2D231FE78F00BA5298 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4998BF33231FE97600BA5298 /* RainParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = RainParticle.sks; sourceTree = "<group>"; };
+		499AD2042324570200C20B13 /* coinSound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = coinSound.mp3; sourceTree = "<group>"; };
+		499AD20823245CBA00C20B13 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				4998BF23231FE78D00BA5298 /* GameViewController.swift */,
+				23687760232423C8002B0E02 /* Reachability.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -93,11 +100,13 @@
 		4998BF1A231FE78D00BA5298 /* HackthonGame */ = {
 			isa = PBXGroup;
 			children = (
+				499AD2042324570200C20B13 /* coinSound.mp3 */,
 				4974B6CE2322682900002130 /* Views */,
 				4974B6CD2322681F00002130 /* Controllers */,
 				4974B6CC2322681500002130 /* Particles */,
 				4974B6CB2322680D00002130 /* Game Scene */,
 				4998BF1B231FE78D00BA5298 /* AppDelegate.swift */,
+				499AD20823245CBA00C20B13 /* Reachability.swift */,
 				4998BF28231FE78F00BA5298 /* Assets.xcassets */,
 				4998BF2A231FE78F00BA5298 /* LaunchScreen.storyboard */,
 				4998BF2D231FE78F00BA5298 /* Info.plist */,
@@ -166,6 +175,7 @@
 				4998BF27231FE78D00BA5298 /* Main.storyboard in Resources */,
 				4998BF1E231FE78D00BA5298 /* GameScene.sks in Resources */,
 				4998BF29231FE78F00BA5298 /* Assets.xcassets in Resources */,
+				499AD2052324570200C20B13 /* coinSound.mp3 in Resources */,
 				4998BF2C231FE78F00BA5298 /* LaunchScreen.storyboard in Resources */,
 				4998BF34231FE97600BA5298 /* RainParticle.sks in Resources */,
 			);
@@ -180,6 +190,7 @@
 			files = (
 				4998BF22231FE78D00BA5298 /* GameScene.swift in Sources */,
 				4998BF24231FE78D00BA5298 /* GameViewController.swift in Sources */,
+				499AD20923245CBA00C20B13 /* Reachability.swift in Sources */,
 				4998BF1C231FE78D00BA5298 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

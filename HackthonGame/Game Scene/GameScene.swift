@@ -12,6 +12,17 @@ import GameplayKit
 
 class GameScene: SKScene,SKPhysicsContactDelegate {
     
+    //Constants
+    let POINT_ITEM = "gootItem"
+    let DEAD_ITEM = "badItem"
+    let ACTOR_ITEM = "actor"
+    let BACKGROUND_ITEM = "background"
+    let FONT_NAME = "Chalkduster"
+    
+    
+    
+    
+    
     //Objects
     private var screenSize:CGSize!
     var actor = SKSpriteNode.init(imageNamed: "actor")
@@ -44,21 +55,23 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     private func initializeVariables() {
         screenSize = CGSize.init(width: UIScreen.main.bounds.size.width * 2, height: UIScreen.main.bounds.size.height * 2)
         
-        gameOverLabel = SKLabelNode(fontNamed: "Chalkduster")
-        gameOverLabel.text = "Tap to Play"
+        gameOverLabel = SKLabelNode(fontNamed: FONT_NAME)
+        gameOverLabel.text = "Collect Fruits \n Tap to Play"
+        gameOverLabel.numberOfLines = 2
         gameOverLabel.fontColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        gameOverLabel.zPosition = 2
         gameOverLabel.horizontalAlignmentMode = .center
         gameOverLabel.position = CGPoint(x: 0, y: 0)
         addChild(gameOverLabel)
         
-        scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
+        scoreLabel = SKLabelNode(fontNamed: FONT_NAME)
         scoreLabel.text = "Score: 0"
         scoreLabel.fontColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         scoreLabel.horizontalAlignmentMode = .right
         scoreLabel.position = CGPoint(x: (-screenSize.width / 2) + scoreLabel.frame.size.width + 50, y: (screenSize.height / 2) - 100)
         addChild(scoreLabel)
         
-        highScoreLabel = SKLabelNode(fontNamed: "Chalkduster")
+        highScoreLabel = SKLabelNode(fontNamed: FONT_NAME)
         highScoreLabel.text = "HI: 0"
         highScoreLabel.fontColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         highScoreLabel.horizontalAlignmentMode = .right
@@ -105,6 +118,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         let node = SKSpriteNode.init(imageNamed: texture)
         node.size = size
         node.position = position
+        node.zPosition = 1
         node.applyPhysics(isDynamic: true)
         return node
     }
@@ -123,13 +137,13 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             
             let item = self.generateSpriteNode(texture: "apple", position: CGPoint.init(x: self.getRandomNumber(start: Int(-self.screenSize.width / 2), end: Int(self.screenSize.width / 2)), y: self.getRandomNumber(start: Int(self.screenSize.height / 2), end: Int(self.screenSize.height / 2) + 300)), size: CGSize.init(width: 80, height: 80))
             
-            if randNo > 10
+            if randNo > 9
             {
-                item.name = "badItem"
+                item.name = self.DEAD_ITEM
                 item.texture = SKTexture.init(imageNamed: "\(randNo)")
             }
             else{
-                item.name = "goodItem"
+                item.name = self.POINT_ITEM
                 item.texture = SKTexture.init(imageNamed: "\(self.gameLevelImage)")
             }
             self.addChild(item)
@@ -167,7 +181,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         let positionInScene = touch?.location(in: self)
         for node in nodes(at: positionInScene!) {
             
-            if (node.name == "actor") || (node.name == "background")
+            if (node.name == self.ACTOR_ITEM) || (node.name == self.BACKGROUND_ITEM)
             {
                 isActorHold = true
             }
@@ -200,28 +214,28 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     
     //MARK:- Collision
     func didBegin(_ contact: SKPhysicsContact) {
-        if contact.bodyA.node?.name == "goodItem" && contact.bodyB.node?.name == "actor"{
+        if contact.bodyA.node?.name == POINT_ITEM && contact.bodyB.node?.name == ACTOR_ITEM{
             contact.bodyA.node?.removeFromParent()
-            score = score + 1
+            updateScore()
         }
-        else if contact.bodyB.node?.name == "goodItem" && contact.bodyA.node?.name == "actor" {
+        else if contact.bodyB.node?.name == POINT_ITEM && contact.bodyA.node?.name == ACTOR_ITEM {
             contact.bodyB.node?.removeFromParent()
-            score = score + 1
+            updateScore()
         }
-        else if contact.bodyA.node?.name == "badItem" && contact.bodyB.node?.name == "actor" {
+        else if contact.bodyA.node?.name == DEAD_ITEM && contact.bodyB.node?.name == ACTOR_ITEM {
             isGameOver = true
             gameOver()
             
         }
-        else if contact.bodyB.node?.name == "badItem" && contact.bodyA.node?.name == "actor" {
+        else if contact.bodyB.node?.name == DEAD_ITEM && contact.bodyA.node?.name == ACTOR_ITEM {
             isGameOver = true
             gameOver()
         }
-        else if contact.bodyA.node?.name == "badItem" || contact.bodyA.node?.name == "goodItem"
+        else if contact.bodyA.node?.name == DEAD_ITEM || contact.bodyA.node?.name == POINT_ITEM
         {
             contact.bodyA.node?.removeFromParent()
         }
-        else if contact.bodyB.node?.name == "badItem" || contact.bodyB.node?.name == "goodItem"
+        else if contact.bodyB.node?.name == DEAD_ITEM || contact.bodyB.node?.name == POINT_ITEM
         {
             contact.bodyB.node?.removeFromParent()
         }
@@ -229,40 +243,48 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     
     //MARK:- Game Over & Reset
     func gameOver() {
-        self.isPaused = true
+        
         if highScore < score {
             highScoreLabel.text = "HI : \(score)"
             highScore = score
-            gameOverLabel.text = "GAME OVER \n Tap To Play"
-            gameOverLabel.isHidden = false
         }
+        gameOverLabel.text = "GAME OVER \n Tap To Play"
+        gameOverLabel.isHidden = false
+        self.isPaused = true
     }
     
     func gameReset() {
         
         for node in self.children {
-            if node.name == "goodItem" || node.name == "badItem"
+            if node.name == POINT_ITEM || node.name == DEAD_ITEM
             {
                 node.removeFromParent()
             }
         }
         
         isGameOver = false
-        self.physicsWorld.gravity = CGVector.init(dx: 0, dy: gravityValue)
         itemLimits = 20
         score = 0
         gravityValue = -0.8
+        self.physicsWorld.gravity = CGVector.init(dx: 0, dy: gravityValue)
         self.isPaused = false
         gameNodeGenerateTimer()
     }
     
-    //MARK:- Update Game
+    //MARK:- Update Game , Score , Level
+    
+    func updateScore() {
+        score = score + 1
+        let coinSound = SKAction.playSoundFileNamed("coinSound", waitForCompletion: false)
+        run(coinSound)
+    }
+    
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
         if itemLimits < 1 {
             lastLimit = lastLimit + 5
             itemLimits = lastLimit
-            gravityValue = gravityValue - -0.5
+            gravityValue = gravityValue - -1
             if gameLevelImage < 10
             {
                 gameLevelImage = gameLevelImage + 1
