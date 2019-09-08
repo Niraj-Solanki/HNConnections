@@ -19,10 +19,6 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     let BACKGROUND_ITEM = "background"
     let FONT_NAME = "Chalkduster"
     
-    
-    
-    
-    
     //Objects
     private var screenSize:CGSize!
     var actor = SKSpriteNode.init(imageNamed: "actor")
@@ -280,6 +276,11 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     }
     
     override func update(_ currentTime: TimeInterval) {
+        
+        if isGameOver {
+            self.isPaused = true
+        }
+        
         // Called before each frame is rendered
         if itemLimits < 1 {
             lastLimit = lastLimit + 5
@@ -296,6 +297,9 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             gameNodeGenerateTimer()
         }
     }
+    
+    //MARK:- FOreground & Background
+    
 }
 
 extension SKSpriteNode

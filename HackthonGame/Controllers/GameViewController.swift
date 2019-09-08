@@ -23,22 +23,6 @@ class GameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        if let view = self.view as! SKView? {
-//            // Load the SKScene from 'GameScene.sks'
-//            if let scene = SKScene(fileNamed: "GameScene") {
-//                // Set the scale mode to scale to fit the window
-//                scene.scaleMode = .aspectFill
-//                
-//                // Present the scene
-//                view.presentScene(scene)
-//            }
-//            
-//            view.ignoresSiblingOrder = true
-//            view.showsPhysics = false
-//            view.showsFPS = true
-//            view.showsNodeCount = true
-//        }
     }
     
     @IBAction func hitAPIAction(_ sender: Any) {
@@ -69,15 +53,6 @@ class GameViewController: UIViewController {
         }
     }
     
-    
-    private func isNetworkReachable(with flags: SCNetworkReachabilityFlags) -> Bool {
-        let isReachable = flags.contains(.reachable)
-        let needsConnection = flags.contains(.connectionRequired)
-        let canConnectAutomatically = flags.contains(.connectionOnDemand) || flags.contains(.connectionOnTraffic)
-        let canConnectWithoutUserInteraction = canConnectAutomatically && !flags.contains(.interventionRequired)
-        return isReachable && (!needsConnection || canConnectWithoutUserInteraction)
-    }
-    
     private func setReachabilityNotifier () {
         //declare this inside of viewWillAppear
         
@@ -90,42 +65,9 @@ class GameViewController: UIViewController {
     }
     
     @objc func reachabilityChanged(note: Notification) {
-        
-        let reachability = note.object as! Reachability
-        
-        switch reachability.connection {
-        case .wifi:
-            if let view = UIApplication.shared.keyWindow?.viewWithTag(121)
-            {
-                view.removeFromSuperview()
-            }
-            print("Reachable via WiFi")
-        case .cellular:
-            if let view = UIApplication.shared.keyWindow?.viewWithTag(121)
-            {
-                view.removeFromSuperview()
-            }
-            print("Reachable via Cellular")
-        case .none:
-            print("Network not reachable")
-        }
     }
     
     override var prefersStatusBarHidden: Bool {
         return true
-    }
-}
-
-//MARK:- Alert View-
-extension UIViewController
-{
-    func alert(message: String, title: String = "") {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(OKAction)
-        
-        DispatchQueue.main.async  {
-            self.present(alertController, animated: true, completion: nil)
-        }
     }
 }
