@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -9,16 +13,58 @@
         <!--Game View Controller-->
         <scene sceneID="tXr-a1-R10">
             <objects>
-                <viewController id="BV1-FR-VrT" customClass="GameViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BV1-FR-VrT" customClass="GameViewController" customModule="HackthonGame" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" id="3se-qz-xqx" customClass="SKView">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FoK-jN-McJ">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Network Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cvH-QT-fvz">
+                                        <rect key="frame" x="10" y="50" width="355" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Xp-uE-nld">
+                                        <rect key="frame" x="157.5" y="308.5" width="60" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="60" id="QAu-Wp-keb"/>
+                                        </constraints>
+                                        <state key="normal" title="Hit API"/>
+                                        <connections>
+                                            <action selector="hitAPIAction:" destination="BV1-FR-VrT" eventType="touchUpInside" id="h74-qn-8sx"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="cvH-QT-fvz" firstAttribute="leading" secondItem="FoK-jN-McJ" secondAttribute="leading" constant="10" id="9ak-LU-LWO"/>
+                                    <constraint firstItem="cvH-QT-fvz" firstAttribute="top" secondItem="FoK-jN-McJ" secondAttribute="top" constant="50" id="KxO-CM-Pth"/>
+                                    <constraint firstItem="cvH-QT-fvz" firstAttribute="centerX" secondItem="FoK-jN-McJ" secondAttribute="centerX" id="YYa-Je-ilL"/>
+                                    <constraint firstItem="1Xp-uE-nld" firstAttribute="centerX" secondItem="FoK-jN-McJ" secondAttribute="centerX" id="bfz-7U-9ZL"/>
+                                    <constraint firstItem="1Xp-uE-nld" firstAttribute="centerY" secondItem="FoK-jN-McJ" secondAttribute="centerY" id="fQC-dh-bW4"/>
+                                    <constraint firstAttribute="trailing" secondItem="cvH-QT-fvz" secondAttribute="trailing" constant="10" id="m60-GM-JSO"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="FoK-jN-McJ" firstAttribute="top" secondItem="4qk-I5-YsI" secondAttribute="top" id="3aU-qj-Me5"/>
+                            <constraint firstItem="FoK-jN-McJ" firstAttribute="leading" secondItem="4qk-I5-YsI" secondAttribute="leading" id="AA9-xx-lWG"/>
+                            <constraint firstItem="4qk-I5-YsI" firstAttribute="bottom" secondItem="FoK-jN-McJ" secondAttribute="bottom" id="K26-44-6o2"/>
+                            <constraint firstItem="4qk-I5-YsI" firstAttribute="trailing" secondItem="FoK-jN-McJ" secondAttribute="trailing" id="MUj-Li-vOf"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="4qk-I5-YsI"/>
                     </view>
+                    <connections>
+                        <outlet property="statusLabel" destination="cvH-QT-fvz" id="ZYO-gy-Z7I"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="136.80000000000001" y="132.68365817091455"/>
         </scene>
     </scenes>
 </document>

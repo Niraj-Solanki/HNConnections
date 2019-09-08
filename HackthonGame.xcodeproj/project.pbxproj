@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		23687761232423C8002B0E02 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23687760232423C8002B0E02 /* Reachability.swift */; };
 		4998BF1C231FE78D00BA5298 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4998BF1B231FE78D00BA5298 /* AppDelegate.swift */; };
 		4998BF1E231FE78D00BA5298 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4998BF1D231FE78D00BA5298 /* GameScene.sks */; };
 		4998BF22231FE78D00BA5298 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4998BF21231FE78D00BA5298 /* GameScene.swift */; };
@@ -340,7 +339,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = HackthonGame/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -360,7 +359,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = HackthonGame/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -23,6 +23,9 @@
 
 import SystemConfiguration
 import Foundation
+import GameplayKit
+import SpriteKit
+import UIKit
 
 public enum ReachabilityError: Error {
     case FailedToCreateWithAddress(sockaddr_in)
@@ -60,6 +63,31 @@ public class Reachability {
             case .notReachable: return "No Connection"
             }
         }
+    }
+    
+    public func showGame()
+    {
+        let gameController = UIViewController()
+            gameController.view = SKView.init(frame: gameController.view.frame)
+        if let view = gameController.view as! SKView? {
+            // Load the SKScene from 'GameScene.sks'
+            if let scene = SKScene(fileNamed: "GameScene") {
+                // Set the scale mode to scale to fit the window
+                scene.scaleMode = .aspectFill
+                
+                // Present the scene
+                view.presentScene(scene)
+            }
+            
+            view.ignoresSiblingOrder = true
+            view.showsPhysics = false
+            view.showsFPS = true
+            view.showsNodeCount = true
+            view.tag = 121
+            UIApplication.shared.keyWindow?.addSubview(view);
+        }
+        
+        
     }
     
     public enum Connection: CustomStringConvertible {
@@ -268,7 +296,40 @@ fileprivate extension Reachability {
         
         previousFlags = flags
     }
+        private func setReachabilityNotifier () {
+            //declare this inside of viewWillAppear
     
+            NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged(note:)), name: .reachabilityChanged, object: self)
+            do{
+                try self.startNotifier()
+            }catch{
+                print("could not start reachability notifier")
+            }
+        }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        
+                let reachability = note.object as! Reachability
+        
+                switch reachability.connection {
+                case .wifi:
+                    if let view = UIApplication.shared.keyWindow?.viewWithTag(121)
+                    {
+                        view.removeFromSuperview()
+                    }
+                    print("Reachable via WiFi")
+                case .cellular:
+                    if let view = UIApplication.shared.keyWindow?.viewWithTag(121)
+                    {
+                        view.removeFromSuperview()
+                    }
+                    print("Reachable via Cellular")
+                case .none:
+                    print("Network not reachable")
+                }
+            }
+    
+        
     var isOnWWANFlagSet: Bool {
         #if os(iOS)
         return flags.contains(.isWWAN)

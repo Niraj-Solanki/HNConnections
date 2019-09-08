@@ -13,39 +13,54 @@ import SystemConfiguration
 
 class GameViewController: UIViewController {
     private let reachability = Reachability()!
-    //private let reachability = SCNetworkReachabilityCreateWithName(nil, "www.raywenderlich.com")
+    
+    @IBOutlet weak var statusLabel: UILabel!
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.setReachabilityNotifier()
     }
     
-    
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        //self.checkReachable()
         
-        if let view = self.view as! SKView? {
-            // Load the SKScene from 'GameScene.sks'
-            if let scene = SKScene(fileNamed: "GameScene") {
-                // Set the scale mode to scale to fit the window
-                scene.scaleMode = .aspectFill
-                
-                // Present the scene
-                view.presentScene(scene)
-            }
-            
-            view.ignoresSiblingOrder = true
-            view.showsPhysics = false
-            view.showsFPS = true
-            view.showsNodeCount = true
+//        if let view = self.view as! SKView? {
+//            // Load the SKScene from 'GameScene.sks'
+//            if let scene = SKScene(fileNamed: "GameScene") {
+//                // Set the scale mode to scale to fit the window
+//                scene.scaleMode = .aspectFill
+//                
+//                // Present the scene
+//                view.presentScene(scene)
+//            }
+//            
+//            view.ignoresSiblingOrder = true
+//            view.showsPhysics = false
+//            view.showsFPS = true
+//            view.showsNodeCount = true
+//        }
+    }
+    
+    @IBAction func hitAPIAction(_ sender: Any) {
+        switch Reachability.init()?.connection {
+        case .wifi?:
+            statusLabel.text = "Online Wifi"
+        case .cellular?:
+            statusLabel.text = "Online Celluler"
+        case .none:
+            print("Not Reachable")
+            Reachability.init()?.showGame()
+        case .some(.none):
+            statusLabel.text = "Offline"
+            Reachability.init()?.showGame()
         }
     }
-
+    
+    
     override var shouldAutorotate: Bool {
         return true
     }
-
+    
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         if UIDevice.current.userInterfaceIdiom == .phone {
             return .allButUpsideDown
@@ -53,28 +68,8 @@ class GameViewController: UIViewController {
             return .all
         }
     }
-   
-//    private func checkReachable()
-//    {
-//        var flags = SCNetworkReachabilityFlags()
-//        SCNetworkReachabilityGetFlags(self.reachability!, &flags)
-//
-//        if (isNetworkReachable(with: flags))
-//        {
-//            print (flags)
-//            if flags.contains(.isWWAN) {
-//                self.alert(message:"via mobile",title:"Reachable")
-//                return
-//            }
-//
-//            self.alert(message:"via wifi",title:"Reachable")
-//        }
-//        else if (!isNetworkReachable(with: flags)) {
-//            self.alert(message:"Sorry no connection",title: "unreachable")
-//            print (flags)
-//            return
-//        }
-//    }
+    
+    
     private func isNetworkReachable(with flags: SCNetworkReachabilityFlags) -> Bool {
         let isReachable = flags.contains(.reachable)
         let needsConnection = flags.contains(.connectionRequired)
@@ -83,15 +78,15 @@ class GameViewController: UIViewController {
         return isReachable && (!needsConnection || canConnectWithoutUserInteraction)
     }
     
-     private func setReachabilityNotifier () {
-     //declare this inside of viewWillAppear
-     
-     NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged(note:)), name: .reachabilityChanged, object: reachability)
-     do{
-     try reachability.startNotifier()
-     }catch{
-     print("could not start reachability notifier")
-     }
+    private func setReachabilityNotifier () {
+        //declare this inside of viewWillAppear
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged(note:)), name: .reachabilityChanged, object: reachability)
+        do{
+            try reachability.startNotifier()
+        }catch{
+            print("could not start reachability notifier")
+        }
     }
     
     @objc func reachabilityChanged(note: Notification) {
@@ -100,13 +95,22 @@ class GameViewController: UIViewController {
         
         switch reachability.connection {
         case .wifi:
+            if let view = UIApplication.shared.keyWindow?.viewWithTag(121)
+            {
+                view.removeFromSuperview()
+            }
             print("Reachable via WiFi")
         case .cellular:
+            if let view = UIApplication.shared.keyWindow?.viewWithTag(121)
+            {
+                view.removeFromSuperview()
+            }
             print("Reachable via Cellular")
         case .none:
             print("Network not reachable")
         }
     }
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }

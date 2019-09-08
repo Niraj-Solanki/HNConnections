@@ -23,6 +23,8 @@
 
 import SystemConfiguration
 import Foundation
+import SpriteKit
+import GameplayKit
 
 public enum ReachabilityError: Error {
     case FailedToCreateWithAddress(sockaddr_in)
